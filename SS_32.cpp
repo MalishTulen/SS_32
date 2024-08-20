@@ -1,16 +1,17 @@
 #include <stdio.h>
 #include <math.h>
-const int UNREAL_PIZDETS = -1;
+const int ALLZERO = -1;
+const double Epc = 0.000001;
 //Решение квадратных уравнений
-
+int SS(double a,double b,double c,double *x1,double *x2);
 int main()
 {
     double a=0,b=0,c=0;
     printf("Insert koeff a,b,c:");
-    scanf("%lf %lf %lf",&a,&b,&c);
+    scanf("%lf %lf %lf",&a,&b,&c);    //Вводятся коэффы a, b и c
     double x1=0,x2=0;
-    int Amount_of_Square_Roots;
-    Amount_of_Square_Roots=SS(a,b,c,&x1,&x2);
+    int Amount_of_Square_Roots;             //Вводится Amount_of_Square_Roots
+    Amount_of_Square_Roots=SS(a,b,c,&x1,&x2);         //которая считат колво корней
     switch(Amount_of_Square_Roots)
     {
         case 0: printf("0 korney");
@@ -19,34 +20,47 @@ int main()
                 break;
         case 2: printf("2 kornya, %g and %g",x1,x2);
                 break;
-        case UNREAL_PIZDETS: printf("Impressive! Ochen mnogo korney!");
+        case ALLZERO: printf("Impressive! Ochen mnogo korney!");
                 break;
         default: printf("a!=0");
                 break;
     }
     return 0;
 }
-int SS(a,b,c,&x1,&x2,Amount_of_Square_Roots)
+int SS(double a,double b,double c,double *x1,double *x2)
 {
-    if (a==0)
-        Amount_of_Square_Roots=60;
-        break;
+    if (fabs(a)<Epc)
+    {
+        if (fabs(b)<Epc && fabs(c)<Epc)
+        {
+            return ALLZERO;
+        }
+        else
+        {
+            return 60;
+        }
+    }
     else
-        int d;
-        d=b*b-4*a*c;
+    {
+        double d = b*b-4*a*c;
         if (d<0)
-            Amount_of_Square_Roots=0;
-            break;
-        else:
-            if (d==0)
-                Amount_of_Square_Roots=1;
-                x1=x2=-b/2/a
-                break;
+        {
+            return 0;
+        }
+        else
+        {
+            if (fabs(d)<Epc)
+            {
+                *x1=*x2=-b/2/a;
+                return 1;
+            }
             if (d>0)
-                Amount_of_Square_Roots=2;
-                x1=(-b+sqrt(d))/(2*a);
-                x2=(-b-sqrt(d))/(2*a);
-                break;
-
-
+            {
+                *x1=(-b+sqrt(d))/(2*a);
+                *x2=(-b-sqrt(d))/(2*a);
+                return 2;
+            }
+        }
+    }
+    return 0;
 }
