@@ -11,7 +11,7 @@ int main()
     double x1=0,x2=0;
     int Amount_of_Square_Roots;
     Amount_of_Square_Roots=SS(a,b,c,&x1,&x2);
-    switch(Amount_of_Square_Roots)
+    switch(AMSR)
     {
         case 0: printf("0 korney");
                 break;
@@ -34,19 +34,17 @@ int SS(a,b,c,&x1,&x2,Amount_of_Square_Roots)
     else
         int d;
         d=b*b-4*a*c;
-        if (d<0)
+        if (d<0) 
             Amount_of_Square_Roots=0;
             break;
         else:
             if (d==0)
                 Amount_of_Square_Roots=1;
-                x1=x2=-b/2/a
+                x1=
                 break;
             if (d>0)
                 Amount_of_Square_Roots=2;
-                x1=(-b+sqrt(d))/(2*a);
-                x2=(-b-sqrt(d))/(2*a);
                 break;
-
-
+                
+        
 }
