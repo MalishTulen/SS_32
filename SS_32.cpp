@@ -1,36 +1,45 @@
 #include <stdio.h>
 #include <math.h>
 #include <assert.h>
+#include <string.h>
 const int ALLZERO = -1;
-const double Epc = 0.000001;
+const double EPC = 0.000001;
 //Решение квадратных уравнений
 int SS(double a, double b, double c, double *x1, double *x2);
+int INPUTIN_32 ( char input, double x );
 
 //-----------------------------------------------------------------------
 int main()
 {
     double a = 0, b = 0, c = 0;
-    printf ("Insert koeff a, b, c:");
-    while ((scanf("%lf %lf %lf", &a, &b, &c)) != 3)
-        {
-            a = 0, b = 0, c = 0;
-            printf("Insert koeff a, b, c:");
-            scanf("%lf %lf %lf", &a, &b, &c);
-        }
-    scanf("%lf %lf %lf", &a, &b, &c);
+    a = INPUTIN_32 ( 'a', a );
+    b = INPUTIN_32 ( 'b', b );
+    c = INPUTIN_32 ( 'c', c );
+
+    //printf ( "%lf %lf %lf", a, b, c );
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     double x1 = 0, x2 = 0;
+
     int Amount_of_Square_Roots = 0;
+
     Amount_of_Square_Roots = SS(a, b, c, &x1, &x2);
+
     switch(Amount_of_Square_Roots)
     {
         case 0: printf("0 korney");
                 break;
+
         case 1: printf("1 koren, x1=%g", x1);
                 break;
+
         case 2: printf("2 kornya, %g and %g", x1, x2);
                 break;
+
         case ALLZERO: printf("Impressive! Ochen mnogo korney!");
                 break;
+
         default: printf("a!=0");
                 break;
     }
@@ -42,9 +51,9 @@ int main()
 
 int SS(double a, double b, double c, double *x1, double *x2)
 {
-    if (fabs(a) < Epc)
+    if (fabs(a) < EPC)
     {
-        if (fabs(b) < Epc && fabs(c) < Epc)
+        if (fabs(b) < EPC && fabs(c) < EPC)
         {
             return ALLZERO;
         }
@@ -62,7 +71,7 @@ int SS(double a, double b, double c, double *x1, double *x2)
         }
         else
         {
-            if (fabs(d) < Epc)
+            if (fabs(d) < EPC)
             {
                 *x1 = *x2 = -b/2/a;
                 return 1;
@@ -76,4 +85,22 @@ int SS(double a, double b, double c, double *x1, double *x2)
         }
     }
     return 0;
+}
+
+//------------------------------------------------
+
+
+int INPUTIN_32 ( char input, double x )
+{
+    printf ("Insert koeff %c:", input);
+    if (scanf ("%lf", &x) != 1)
+    {
+        while ( scanf ("%lf", &x) != 1 )
+        {
+            printf ( "Wrong input, please insert koeff %c again", input );
+            scanf ("%lf", &x );
+
+        }
+    }
+    return x;
 }
