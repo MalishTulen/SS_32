@@ -8,6 +8,8 @@ const double EPC = 0.000001;
 int SS(double a, double b, double c, double *x1, double *x2);
 int inputin_32 ( char input, double *x );
 int switch_to_answer ( double a, double b, double c, double x1, double x2, int amount_of_Square_Roots );
+void run_testicals ( int test_number, double a, double b, double c,
+                    double x1_expedo, double x2_expedo, int amount_of_Square_Roots);
 
 
 //-----------------------------------------------------------------------
@@ -25,6 +27,8 @@ int main()
     int amount_of_Square_Roots = 0;
 
     switch_to_answer ( a, b, c, x1, x2, amount_of_Square_Roots );
+
+    run_testicals( 1, 1, 0, -4, 2, -2, 2 );
 }
 
 //----------------------------------------------------------------
@@ -37,10 +41,10 @@ int switch_to_answer ( double a, double b, double c, double x1, double x2, int a
         case 0: printf("0 korney");
                 break;
 
-        case 1: printf("1 koren, x1=%g", x1);
+        case 1: printf("1 koren, x1 = %g", x1);
                 break;
 
-        case 2: printf("2 kornya, %g and %g", x1, x2);
+        case 2: printf("2 kornya:\nx1 = %g\nx2 = %g", x1, x2);
                 break;
 
         case ALLZERO: printf("Impressive! Ochen mnogo korney!");
@@ -106,7 +110,7 @@ int inputin_32 ( char input, double *x )
 
     while (scanf_status != 1)
     {
-        scanf_status = scanf ("%lf",x);
+        scanf_status = scanf ("%lg",x);
 
         if (scanf_status == 1)
         {
@@ -125,6 +129,21 @@ int inputin_32 ( char input, double *x )
 }
 
 
+//-------------------------------------------------------------------------------
+
+
+void run_testicals ( int test_number, double a, double b, double c,
+                    double x1_expedo, double x2_expedo, int amount_of_Square_Roots)
+{
+    double x1 = 0, x2 = 0;
+
+    printf("\nTest %d:\n a = %lg, b = %lg, c = %lg, pri etom  ", test_number, a, b, c);
+
+    switch_to_answer(a, b, c, x1, x2, amount_of_Square_Roots);
+
+    printf("\nExpected: x1 = %lg, x2 = %lg and %d korney", x1_expedo, x2_expedo, amount_of_Square_Roots);
+
+}
 
 
 
