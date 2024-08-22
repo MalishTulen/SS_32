@@ -7,6 +7,8 @@ const double EPC = 0.000001;
 //Решение квадратных уравнений
 int SS(double a, double b, double c, double *x1, double *x2);
 int inputin_32 ( char input, double *x );
+int switch_to_answer ( double a, double b, double c, double x1, double x2, int amount_of_Square_Roots );
+
 
 //-----------------------------------------------------------------------
 int main()
@@ -19,15 +21,18 @@ int main()
 
     //printf ( "%lf %lf %lf", a, b, c );
 
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
     double x1 = 0, x2 = 0;
+    int amount_of_Square_Roots = 0;
 
-    int Amount_of_Square_Roots = 0;
+    switch_to_answer ( a, b, c, x1, x2, amount_of_Square_Roots );
+}
 
-    Amount_of_Square_Roots = SS(a, b, c, &x1, &x2);
+//----------------------------------------------------------------
+int switch_to_answer ( double a, double b, double c, double x1, double x2, int amount_of_Square_Roots )
+{
+    amount_of_Square_Roots = SS(a, b, c, &x1, &x2);
 
-    switch(Amount_of_Square_Roots)
+    switch(amount_of_Square_Roots)
     {
         case 0: printf("0 korney");
                 break;
@@ -41,11 +46,12 @@ int main()
         case ALLZERO: printf("Impressive! Ochen mnogo korney!");
                 break;
 
-        default: printf("a!=0");
+        default: printf("Erm What da sigma?");
                 break;
     }
     return 0;
 }
+
 
 //----------------------------------------------------------------
 
@@ -117,3 +123,11 @@ int inputin_32 ( char input, double *x )
 
     return 0;
 }
+
+
+
+
+
+
+
+
