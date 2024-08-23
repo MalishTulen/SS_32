@@ -21,9 +21,9 @@ const double EPC = 0.000001;
 
 int SquareSolver ( double a, double b, double c, double *x1, double *x2 );
 int inputin_32 ( char input, double *x );
-int switch_to_answer ( double a, double b, double c, double *x1, double *x2, int amount_of_square_roots );
-void run_testicals ( int test_number, double a, double b, double c,
-                    double *x1_expedo, double *x2_expedo, int amount_of_square_roots );
+int switch_to_answer ( double a, double b, double c, double x1, double x2, int amount_of_square_roots );
+int run_testicals ( int test_number, double a, double b, double c,
+                    double x1_expedo, double x2_expedo, int amount_of_square_roots );
 int abs ( double x );
 void kvadratka ( double a, double b, double c, double x1, double x2, int amount_of_square_roots );
 
@@ -34,16 +34,16 @@ struct test
     int test_number;
     double a, b, c;
     double  x1_expedo, x2_expedo;
-    int amount_of_square_roots;
+    int amount_of_square_roots_expedo;
 };
 
 test test_base[5] =
 {
-    { .test_number = 1, .a = 1, .b = 0, .c = -4, .x1_expedo = 2, .x2_expedo = -2, .amount_of_square_roots = 2 },
-    { .test_number = 2, .a = 1, .b = 0, .c = -9, .x1_expedo = 3, .x2_expedo = -3, .amount_of_square_roots = 2 },
-    { .test_number = 3, .a = 1, .b = -4, .c = 3, .x1_expedo = 3, .x2_expedo = 1, .amount_of_square_roots = 2 },
-    { .test_number = 4, .a = 1, .b = 4, .c = 3, .x1_expedo = -3, .x2_expedo = -1, .amount_of_square_roots = 2 },
-    { .test_number = 5, .a = 9, .b = 0, .c = -81, .x1_expedo = 3, .x2_expedo = -3, .amount_of_square_roots = 2 },
+    { .test_number = 1, .a = 1, .b = 0, .c = -4, .x1_expedo = 2, .x2_expedo = -2, .amount_of_square_roots_expedo = 2 },
+    { .test_number = 2, .a = 1, .b = 0, .c = -9, .x1_expedo = 3, .x2_expedo = -3, .amount_of_square_roots_expedo = 2 },
+    { .test_number = 3, .a = 1, .b = -4, .c = 3, .x1_expedo = 3, .x2_expedo = 1, .amount_of_square_roots_expedo = 2 },
+    { .test_number = 4, .a = 1, .b = 4, .c = 3, .x1_expedo = -3, .x2_expedo = -1, .amount_of_square_roots_expedo = 2 },
+    { .test_number = 5, .a = 9, .b = 0, .c = -81, .x1_expedo = 3, .x2_expedo = -3, .amount_of_square_roots_expedo = 2 },
 };
 
 
@@ -52,7 +52,7 @@ test test_base[5] =
 //-------------------------------------------------------------------------
 int main ()
 {
-    printf ( "~~~~KVADRATKA~~~~\n\n\nHello!\npress 1 to solve qudratnoe uravnenie\npress 2 to run tests\nYour input:");
+    printf ( "~~~~KVADRATKA~~~~\n\nHello!\npress 1 to solve qudratnoe uravnenie\npress 2 to run tests\nYour input:");
     int checker = 0;
     int truee = 1;
     int falsee = 0;
@@ -85,7 +85,7 @@ int main ()
                     double x1 = 0, x2 = 0;
                     int amount_of_square_roots = 0;
 
-                    switch_to_answer ( a, b, c, &x1, &x2, amount_of_square_roots );
+                    switch_to_answer ( a, b, c, x1, x2, amount_of_square_roots );
                     break;
                 }
                 case INPUT_2:
@@ -93,8 +93,8 @@ int main ()
                     int i = 0;
                     for ( i = 0; i < 5; i++ )
                         run_testicals ( test_base[i].test_number, test_base[i].a, test_base[i].b,
-                          test_base[i].c,  &test_base[i].x1_expedo,  &test_base[i].x2_expedo,
-                         test_base[i].amount_of_square_roots );
+                          test_base[i].c,  test_base[i].x1_expedo,  test_base[i].x2_expedo,
+                         test_base[i].amount_of_square_roots_expedo );
                     break;
                 }
                 default:
@@ -111,19 +111,19 @@ int main ()
 //----------------------------------------------------------------
 
 
-int switch_to_answer ( double a, double b, double c, double *x1, double *x2, int amount_of_square_roots )
+int switch_to_answer ( double a, double b, double c, double x1, double x2, int amount_of_square_roots )
 {
-    amount_of_square_roots = SquareSolver ( a, b, c, x1, x2 );
+    amount_of_square_roots = SquareSolver ( a, b, c, &x1, &x2 );
 
     switch ( amount_of_square_roots )
     {
-        case NO_ROOTS: printf ( "0 korney" );
+        case NO_ROOTS: printf ( "%d korney", amount_of_square_roots );
                 break;
 
-        case ONE_ROOT: printf ( "1 koren, x1 = %lg", *x1 );
+        case ONE_ROOT: printf ( "%d koren, x1 = %lg", amount_of_square_roots,  x1 );
                 break;
 
-        case TWO_ROOTS: printf ( "2 kornya:\nx1 = %lg\nx2 = %lg", *x1, *x2 );
+        case TWO_ROOTS: printf ( "%d kornya:\nx1 = %lg\nx2 = %lg", amount_of_square_roots, x1, x2 );
                 break;
 
         case ALLZERO: printf ( "Impressive! Ochen mnogo korney!" );
@@ -214,16 +214,17 @@ int inputin_32 ( char input, double *x )
 //-------------------------------------------------------------------------------
 
 
-void run_testicals ( int test_number, double a, double b, double c,
-                    double *x1_expedo, double *x2_expedo, int amount_of_Square_Roots )
+int run_testicals ( int test_number, double a, double b, double c,
+                    double x1_expedo, double x2_expedo, int amount_of_square_roots_expedo )
 {
     double x1 = 0, x2 = 0;
+    int amount_of_square_roots = 0;
 
     printf ( "\nTest %d:\n a = %lg, b = %lg, c = %lg, pri etom  ", test_number, a, b, c );
 
-    switch_to_answer ( a, b, c, &x1, &x2, amount_of_Square_Roots );
+    switch_to_answer ( a, b, c, x1, x2, amount_of_square_roots );
 
-    printf ( "\nExpected: x1 = %lg, x2 = %lg and %d korney", x1_expedo, x2_expedo, amount_of_Square_Roots );
+    printf ( "\nExpected: x1 = %lg, x2 = %lg and %d korney", x1_expedo, x2_expedo, amount_of_square_roots_expedo );
 
 }
 
