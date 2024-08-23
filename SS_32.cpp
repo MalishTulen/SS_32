@@ -4,55 +4,70 @@
 #include <assert.h>
 #include <string.h>
 
-enum Roots
+enum roots
 {
     ALLZERO = -1,
     NO_ROOTS = 0,
     ONE_ROOT = 1,
     TWO_ROOTS = 2,
     A_IS_ZERO = 3,
+    ERROR_ROOT = 666,
 };
+
 enum inputs
 {
     INPUT_1 = '1',
     INPUT_2 = '2',
 };
-enum ntests
-{
-    N_kg_TESTA = 5,
-};
+
+const int N_kg_TESTA = 5;
 
 const double EPC = 0.000001;
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 int SquareSolver ( double a, double b, double c, double *x1, double *x2 );
+
 int inputin_32 ( char input, double *x );
+
 int switch_to_answer ( double a, double b, double c, double *x1, double *x2, int amount_of_square_roots );
+
 int run_testicals (   struct test * pointer  );
+
 int moduler ( double x );
+
 void kvadratka ( double a, double b, double c, double x1, double x2, int amount_of_square_roots );
-void linear_solver ( double b, double c, double x1, int amount_of_square_roots );
-int inputer ( );
+
+void linear_solver ( double b, double c, double *x1 );
+
+int inputer ();
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 struct test
 {
     int test_number;
-    double a, b, c;
-    double  x1_expedo, x2_expedo;
+    struct koeffs
+    {
+        double a;
+        double b;
+        double c;
+    }koeffs ;
+    struct
+    {
+        double x1_expedo;
+        double x2_expedo;
+    } answers;
     int amount_of_square_roots_expedo;
 };
 
-
 test test_base[N_kg_TESTA] =
 {
-    { .test_number = 1, .a = 1,  .b = 0,  .c = -4,  .x1_expedo = 2,  .x2_expedo = -2, .amount_of_square_roots_expedo = 2 },
-    { .test_number = 2, .a = 1,  .b = 0,  .c = -9,  .x1_expedo = 3,  .x2_expedo = -3, .amount_of_square_roots_expedo = 2 },
-    { .test_number = 3, .a = 1,  .b = -4, .c = 3,   .x1_expedo = 3,  .x2_expedo = 1,  .amount_of_square_roots_expedo = 2 },
-    { .test_number = 4, .a = 1,  .b = 2,  .c = 1,   .x1_expedo = -1, .x2_expedo = -1, .amount_of_square_roots_expedo = 2 },
-    { .test_number = 5, .a = 9,  .b = 0,  .c = -81, .x1_expedo = 3,  .x2_expedo = -3, .amount_of_square_roots_expedo = 2 },
+    { .test_number = 1, {.a = 1,  .b = 0,  .c = -4},  {.x1_expedo = 2,  .x2_expedo = -2}, .amount_of_square_roots_expedo = 2 },
+    { .test_number = 2, {.a = 1,  .b = 0,  .c = -9},  {.x1_expedo = 3,  .x2_expedo = -3}, .amount_of_square_roots_expedo = 2 },
+    { .test_number = 3, {.a = 1,  .b = -4, .c = 3},   {.x1_expedo = 3,  .x2_expedo = 1},  .amount_of_square_roots_expedo = 2 },
+    { .test_number = 4, {.a = 1,  .b = 2,  .c = 1},   {.x1_expedo = -1, .x2_expedo = -1}, .amount_of_square_roots_expedo = 2 },
+    { .test_number = 5, {.a = 9,  .b = 0,  .c = -81}, {.x1_expedo = 3,  .x2_expedo = -3}, .amount_of_square_roots_expedo = 2 },
 };
 
 
@@ -92,7 +107,7 @@ int main ()
         }
         default:
         {
-            printf("Somehow ERROR in main input\n");
+            printf ( "Somehow ERROR in main input\n" );
             break;
         }
     }
@@ -103,33 +118,38 @@ int main ()
 
 int switch_to_answer ( double a, double b, double c, double *x1, double *x2, int amount_of_square_roots )
 {
+    assert ( x1 && "ERROR: adress x1" );
+    assert ( x2 && "ERROR: adress x2" );
+    assert ( x1 != x2 && "ERROR: adress x1 = adress x2");
+
     amount_of_square_roots = SquareSolver ( a, b, c, x1, x2 );
 
     switch ( amount_of_square_roots )
     {
         case NO_ROOTS:
+        {
             printf ( "%d korney ", amount_of_square_roots );
             break;
-
+        }
         case ONE_ROOT:
+        {
             printf ( "%d koren:\n x1 = x2 = %lg", amount_of_square_roots, *x1 );
             break;
-
+        }
         case TWO_ROOTS:
+        {
             printf ( "%d kornya:\nx1 = %lg\nx2 = %lg", amount_of_square_roots, *x1, *x2 );
             break;
-
+        }
         case ALLZERO:
+        {
             printf ( "Impressive! Ochen mnogo korney!" );
             break;
-
-        case A_IS_ZERO:
-            linear_solver ( b, c, *x1, amount_of_square_roots );
-            break;
-
+        }
         default:
-            printf ( "HOW????" );
-
+        {
+            printf ( "HOW????" ); // TODO: put more asserts
+        }
     }
     return 0;
 }
@@ -140,6 +160,10 @@ int switch_to_answer ( double a, double b, double c, double *x1, double *x2, int
 
 int SquareSolver ( double a, double b, double c, double *x1, double *x2 )
 {
+    assert ( x1 && "ERROR: adress x1" );
+    assert ( x2 && "ERROR: adress x2" );
+    assert ( x1 != x2 && "ERROR: adress x1 = adress x2");
+
     if ( moduler ( a ) == 1 )
     {
         if ( moduler ( b ) == 1)
@@ -155,7 +179,8 @@ int SquareSolver ( double a, double b, double c, double *x1, double *x2 )
         }
         else
         {
-            return A_IS_ZERO;
+             linear_solver ( b, c, x1 );
+             return ONE_ROOT;
         }
     }
     else
@@ -190,6 +215,7 @@ int SquareSolver ( double a, double b, double c, double *x1, double *x2 )
 
 int inputin_32 ( char input, double *x )
 {
+    assert ( x && "ERROR: adress x" );
     int scanf_status = 0;
     printf ( "Insert koeff %c:", input );
 
@@ -210,32 +236,34 @@ int inputin_32 ( char input, double *x )
         printf ( "Insert again:" );
     }
 
-    return 0;
+    return ERROR_ROOT;
 }
 
 
 //-------------------------------------------------------------------------------
 
 
-int run_testicals ( struct test * pointer  )
+int run_testicals ( struct test * ptr_to_test )
 {
     double x1 = 0, x2 = 0;
     int amount_of_square_roots = 0;
 
-    printf ( "\n----------------------------------------------\n\nTest %d:\n a = %lg, b = %lg, c = %lg, pri etom  ", pointer -> test_number,
-    pointer -> a, pointer -> b, pointer -> c );
+    printf ( "\n----------------------------------------------\n\nTest %d:\n a = %lg, b = %lg, c = %lg, pri etom  ",
+             ptr_to_test -> test_number, ptr_to_test -> koeffs.a, ptr_to_test -> koeffs.b, ptr_to_test -> koeffs.c );
 
-    switch_to_answer ( pointer -> a, pointer -> b, pointer -> c, &x1, &x2, amount_of_square_roots );
+    switch_to_answer ( ptr_to_test -> koeffs.a, ptr_to_test -> koeffs.b,
+                       ptr_to_test -> koeffs.c, &x1, &x2, amount_of_square_roots );
 
-    printf ( "\nExpected: x1 = %lg, x2 = %lg and %d korney\n", pointer -> x1_expedo, pointer -> x2_expedo, pointer -> amount_of_square_roots_expedo );
+    printf ( "\nExpected: x1 = %lg, x2 = %lg and %d korney\n", ptr_to_test -> answers.x1_expedo, ptr_to_test -> answers.x2_expedo,
+                                                               ptr_to_test -> amount_of_square_roots_expedo );
 
-    if ( ( moduler ( x1 - pointer -> x1_expedo ) == 1 ) && ( moduler ( x2 - pointer -> x2_expedo ) == 1 )  )
+    if ( ( moduler ( x1 - ptr_to_test -> answers.x1_expedo ) == 1 ) && ( moduler ( x2 - ptr_to_test -> answers.x2_expedo ) == 1 )  )
     {
         return 1;
     }
     else
     {
-        printf ( "\n\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n\n       TEST %d IS WRONG\n\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n", pointer -> test_number );
+        printf ( "\n\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n\n       TEST %d IS WRONG\n\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n", ptr_to_test -> test_number );
         return 0;
     }
 }
@@ -256,12 +284,13 @@ int moduler ( double x )
 
 //----------------------------------------------------------------------------------
 
-void linear_solver ( double b, double c, double x1, int amount_of_square_roots )
+void linear_solver ( double b, double c, double *x1 )
 {
-    x1 = -c / b;
-    amount_of_square_roots = 1;
-    printf ( "%d koren:\nx1 = %lg", amount_of_square_roots, x1 );
+    assert ( x1 && "ERROR: adress x1" );
+    *x1 = -c / b;
 }
+
+//----------------------------------------------------------------------------------
 
 int inputer (  )
 {
