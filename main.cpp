@@ -1,15 +1,17 @@
-#include <stdio.h>
-#include <math.h>
-#include <assert.h>
-#include <string.h>
-#include "constants_and_ints.h"
-#include "functions.cpp"
+#include "constants.h"
+#include "input_functions.h"
+#include "poltorashka_function.h"
+#include "solver_functions.h"
+#include "output_functions.h"
 
 //#include <TXlib.h>
 /*BACKLOG
 -новая функция "квадратка" и "тесты"   +
 -распихать по файлам                   +
 */
+
+// TODO: побить по файлам (ввод, решалка, вывод),
+// rename this file to main.cpp
 
 int main ()
 {
@@ -27,7 +29,7 @@ int main ()
         }
         case INPUT_3:
         {
-            poltorashka ();
+            cat ();
             break;
         }
         default:
