@@ -18,7 +18,7 @@ const int NUM_TESTOV = 5;
 
 const double EPC = 0.000001;
 
-void main()
+int main()
 {
-
+    return 0;
 }
